@@ -1,0 +1,22 @@
+aliyun:
+       accountId: 1786089012649873
+       accessKeyId: accessKeyId
+       accessKeySecret: accessKeySecret
+       MNS:
+           endpoint: http://${aliyun.accountId}.mns.cn-hangzhou-internal.aliyuncs.com
+           # maxConnections: 20
+           # maxConnectionsPerRoute: 20
+           queueName: rooster-dev
+           topicName: rooster-dev
+       OTS:
+           endpoint: http://rooster-dev.cn-hangzhou.ots-internal.aliyuncs.com
+           instance: rooster-dev
+
+rooster:
+        cronExpress: "*/1 * * * * ?"
+
+# Spring settings
+spring:
+       profiles:
+                active: dev
+
