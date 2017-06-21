@@ -67,7 +67,7 @@ public class QuartzConfiguration {
     /**
      * Counter
      */
-    private static int counter = 0;
+    private static long counter = 0;
 
     @Scheduled(cron = "${rooster.cronExpress}")
     public void doClearTask() {
@@ -80,7 +80,7 @@ public class QuartzConfiguration {
                 if(null != batchPopMessage && 0 < batchPopMessage.size()) {
                     receiptHandles = new ArrayList<>();
                     for (Message message: batchPopMessage) {
-                        logger.info("{}: [{}]{}", MessageFormat.format("{0,number,00000000000000000000}", ++counter), queueName, message.getMessageBodyAsString());
+                        logger.info("{}: [{}] {}", MessageFormat.format("{0,number,00000000000000000000}", ++counter), queueName, message.getMessageId());
                         receiptHandles.add(message.getReceiptHandle());
                     }
                     cloudQueue.batchDeleteMessage(receiptHandles);
