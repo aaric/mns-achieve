@@ -28,7 +28,7 @@ public class App implements CommandLineRunner {
     /**
      * blockingQueue
      */
-    public static final BlockingQueue<List<String>> blockingQueue = new ArrayBlockingQueue<>(50);
+    public static final BlockingQueue<List<String>> blockingQueue = new ArrayBlockingQueue<>(10);
 
     /**
      * Run
