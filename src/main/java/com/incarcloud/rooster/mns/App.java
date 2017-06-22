@@ -7,6 +7,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 /**
  * Spring Boot launcher.
  *
@@ -21,6 +25,17 @@ public class App implements CommandLineRunner {
      */
     private static final Logger logger = LoggerFactory.getLogger(QuartzConfiguration.class);
 
+    /**
+     * blockingQueue
+     */
+    public static final BlockingQueue<List<String>> blockingQueue = new ArrayBlockingQueue<>(50);
+
+    /**
+     * Run
+     *
+     * @param args
+     * @throws Exception
+     */
     @Override
     public void run(String... args) throws Exception {
         logger.info("start...");
