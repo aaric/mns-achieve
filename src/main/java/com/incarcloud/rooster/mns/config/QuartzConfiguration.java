@@ -14,6 +14,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * QuartzConfiguration
@@ -71,24 +73,33 @@ public class QuartzConfiguration {
 
     @Scheduled(cron = "${rooster.cronExpress}")
     public void doClearTask() {
-        try {
-            List<String> receiptHandles;
-            List<Message> batchPopMessage;
-            CloudQueue cloudQueue = getCloudQueue();
-            for (int i = 0; i < 1000; i++) {
-                batchPopMessage = cloudQueue.batchPopMessage(16);
-                if(null != batchPopMessage && 0 < batchPopMessage.size()) {
-                    receiptHandles = new ArrayList<>();
-                    for (Message message: batchPopMessage) {
-                        logger.info("{}: [{}] {}", MessageFormat.format("{0,number,00000000000000000000}", ++counter), queueName, message.getMessageId());
-                        receiptHandles.add(message.getReceiptHandle());
-                    }
-                    cloudQueue.batchDeleteMessage(receiptHandles);
-                }
-            }
+        ExecutorService service = Executors.newFixedThreadPool(20);
+        for (int i = 0; i < 50; i++) {
+            service.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        List<String> receiptHandles;
+                        List<Message> batchPopMessage;
+                        CloudQueue cloudQueue = getCloudQueue();
+                        for (int i = 0; i < 1000; i++) {
+                            batchPopMessage = cloudQueue.batchPopMessage(16);
+                            if(null != batchPopMessage && 0 < batchPopMessage.size()) {
+                                receiptHandles = new ArrayList<>();
+                                for (Message message: batchPopMessage) {
+                                    logger.info("{}: [{}] {}", MessageFormat.format("{0,number,00000000000000000000}", ++counter), queueName, message.getMessageId());
+                                    receiptHandles.add(message.getReceiptHandle());
+                                }
+                                cloudQueue.batchDeleteMessage(receiptHandles);
+                            }
+                        }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
+        service.shutdown();
     }
 }
