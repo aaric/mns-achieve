@@ -50,6 +50,9 @@ public class MessageReader implements Runnable {
                         receiptHandles.add(message.getReceiptHandle());
                     }
                     blockingQueue.put(receiptHandles);
+                } else {
+                    logger.info("No message to delete!");
+                    break;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
