@@ -1,2 +1,3 @@
-# rooster-mns-consumer
-Rooster MNS consumer.
+# mns-achieve
+
+> Aliyun MNS Learning.
